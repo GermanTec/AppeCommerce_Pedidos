@@ -64,7 +64,7 @@ export const updateOrder = async (req, res, next) => {
 // FIN PUT********************************************************************************************* */
 
 // DELETE************************************************************************************************ */
-export const deletePedidoByValue = async (req, res, next) => {
+export const deleteOrderOne = async (req, res, next) => {
     try {
       const { id } = req.params; // Obtén el id del Pedido para eliminar
       

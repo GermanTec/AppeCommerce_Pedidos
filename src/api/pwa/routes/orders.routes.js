@@ -1,12 +1,12 @@
 import { Router } from "express";
-import * as pedidoController from '../controllers/orders.controller';
+import * as ordersController from '../controllers/orders.controller';
 
 const router = Router();
 
-router.get('/', pedidoController.getOrdersAll);
-router.get('/:id', pedidoController.getPedidoById);
-router.post('/', pedidoController.addPedidos);
-router.put('/:id', pedidoController.updatePedido);
-router.delete('/:id', pedidoController.deletePedidoByValue);
+router.get('/', ordersController.getOrdersAll);
+router.get('/:id', ordersController.getOrdersOne);
+router.post('/', ordersController.addOrders);
+router.put('/:id', ordersController.updateOrder);
+router.delete('/:id', ordersController.deleteOrderOne);
 
 export default router;

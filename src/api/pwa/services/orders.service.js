@@ -1,4 +1,4 @@
-import Pedidos from '../models/orders';
+import Orders from '../models/orders';
 import { OK, FAIL, BITACORA, DATA, AddMSG } from '../../../middlewares/respPWA.handler';
 
 
@@ -13,19 +13,19 @@ export const getOrdersAll = async() => {
         data.api = "/pedido";
         data.process = "Extraer todas los pedidos de la coleccción de Pedidos";
 
-        const PedidosAll = await Pedidos.find().then((pedidos) => {
-            if(!pedidos) {
+        const OrdersAll = await Orders.find().then((orders) => {
+            if(!orders) {
                 data.status = 404;
                 data.messageDEV = "La base de datos <<NO>> tiene Pedidos configurados";
                 throw Error(data.messageDEV);
             }
 
-            return pedidos;
+            return orders;
         });
 
         data.status = 200; //200 = codigo cuando encuentras documentos
         data.messageUSR = "La extracción de los Pedidos <<SI>> tuvo exito";
-        data.dataRes = PedidosAll;
+        data.dataRes = OrdersAll;
 
         bitacora = AddMSG(bitacora, data, 'OK', 200, true);
 
@@ -61,11 +61,11 @@ export const getOrdersOne = async (id) => {
     try {
         bitacora.process = `Obtener Pedido por ID: ${id}`;
         data.method = "GET";
-        data.api = `/pedido/${id}`;
+        data.api = `/orders/${id}`;
         data.process = `Obtener un Pedido específico de la colección de Pedidos por su ID`;
 
-        const PedidoId = await Pedidos.findOne({ id_ordenPedidoOK: id });
-        if (!pedidos) {
+        const OrderId = await Orders.findOne({ Id_OrdenOK: id });
+        if (!orders) {
             data.status = 404;
             data.messageDEV = `No se encontró un Pedido con el ID ${id}.`;
             throw Error(data.messageDEV);
@@ -73,7 +73,7 @@ export const getOrdersOne = async (id) => {
 
         data.status = 200;
         data.messageUSR = "La obtención del Pedido <<SI>> tuvo éxito";
-        data.dataRes = PedidoId;
+        data.dataRes = OrderId;
 
         bitacora = AddMSG(bitacora, data, 'OK', 200, true);
 
@@ -113,7 +113,7 @@ export const addOrders = async(newOrder) => {
         data.api = "/pedido";
         data.process = "Agregar un nuevo pedido a la coleccción de Pedidos";
 
-        const orderAdded = await Pedidos.insertMany(
+        const orderAdded = await Orders.insertMany(
             newOrder,
             { order: true }
         )
@@ -167,10 +167,10 @@ export const updateOrder = async (id, newData) => {
     try {
         bitacora.process = `Actualizar el Pedido con ID ${id}`;
         data.method = "PUT";
-        data.api = `/pedido/${id}`;
+        data.api = `/orders/${id}`;
         data.process = "Actualizar el Pedido en la colección de Pedidos";
 
-        const updatedOrder = await Pedidos.findOneAndUpdate({ id_ordenPedidoOK: id }, newData, {
+        const updatedOrder = await Orders.findOneAndUpdate({ Id_OrdenOK: id }, newData, {
             new: true, 
         });
 
@@ -217,12 +217,12 @@ export const deleteOrderOne = async (valueToDelete) => {
     let data = DATA();
 
     try {
-        bitacora.process = `Actualizar el Pedido con ID ${id}`;
-        data.method = "PUT";
-        data.api = `/pedido/${id}`;
-        data.process = "Actualizar el Pedido en la colección de Pedidos";
+        bitacora.process = `Eliminar el Pedido con ID ${id}`;
+        data.method = "DELETE";
+        data.api = `/orders/${id}`;
+        data.process = "Eliminar el Pedido en la colección de Pedidos";
       // Realiza la eliminación del documento en función del valor proporcionado
-      const result = await Pedidos.deleteOne({ id_ordenPedidoOK: valueToDelete });
+      const result = await Orders.deleteOne({ Id_OrdenOK: valueToDelete });
   
       if (result.deletedCount === 0) {
         // Si no se encontró un documento para eliminar, lanza un error
