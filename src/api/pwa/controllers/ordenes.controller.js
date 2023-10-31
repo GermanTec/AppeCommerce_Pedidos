@@ -1,12 +1,12 @@
-import * as ordersService from '../services/orders.service';
+import * as ordenesService from '../services/ordenes.service';
 
 // GET ALL************************************************************************************************ */
 
-export const getOrdersAll = async(req, res, next) => {
+export const getOrdenesAll = async(req, res, next) => {
     try{
-        const ordersAll = await ordersService.getOrdersAll();
-        if(ordersAll) {
-            return res.status(ordersAll.status).json(ordersAll);
+        const ordenesAll = await ordenesService.getOrdenesAll();
+        if(ordenesAll) {
+            return res.status(ordenesAll.status).json(ordenesAll);
         }
     }catch(error){
         next(error);
@@ -15,12 +15,12 @@ export const getOrdersAll = async(req, res, next) => {
 
 // GET ONE BY ID************************************************************************************************ */
 
-export const getOrdersOne = async (req, res, next) => {
+export const getOrdenesOne = async (req, res, next) => {
     try {
         const { id } = req.params; // Obtén el valor a consultar de los parámetros de la solicitud
     
         // Llamar a la función para buscar y pasa el valor
-        const result = await ordersService.getOrdersOne(id);
+        const result = await ordenesService.getOrdenesOne(id);
     
         if(result) {
             return res.status(result.status).json(result);
@@ -31,12 +31,12 @@ export const getOrdersOne = async (req, res, next) => {
 };
 
 // POST********************************************************************************************** */
-export const addOrders = async(req, res, next) => {
+export const addOrdenes = async(req, res, next) => {
     try{
-        const ordersAdded = await ordersService.addOrders(req.body);
+        const ordenesAdded = await ordenesService.addOrdenes(req.body);
         
-        if(ordersAdded) {
-            return res.status(ordersAdded.status).json(ordersAdded);
+        if(ordenesAdded) {
+            return res.status(ordenesAdded.status).json(ordenesAdded);
         }
     }catch(error){
         next(error);
@@ -45,12 +45,12 @@ export const addOrders = async(req, res, next) => {
 // FIN POST*************************************************************************************** */
 
 // PUT*********************************************************************************************** */
-export const updateOrder = async (req, res, next) => {
+export const updateOrden = async (req, res, next) => {
     try {
         const { id } = req.params; // Obtén el ID de la entrega desde los parámetros de la solicitud
         const newData = req.body; // Obtén los nuevos datos desde el cuerpo de la solicitud
 
-        const result = await ordersService.updateOrder(id, newData);
+        const result = await ordenesService.updateOrden(id, newData);
 
         if (result.status === 200) {
             return res.status(200).json(result);
@@ -64,14 +64,18 @@ export const updateOrder = async (req, res, next) => {
 // FIN PUT********************************************************************************************* */
 
 // DELETE************************************************************************************************ */
-export const deleteOrderOne = async (req, res, next) => {
+export const deleteOrdenOne = async (req, res, next) => {
     try {
       const { id } = req.params; // Obtén el id del Pedido para eliminar
       
       // Llama al servicio de eliminación y pasa el valor a eliminar
-      const result = await ordersService.deleteOrderOne(id);
+      const result = await ordenesService.deleteOrdenOne(id);
   
-      return res.status(200).json(result);
+      if (result.status === 200) {
+        return res.status(200).json(result);
+    } else if (result.status === 404) {
+        return res.status(404).json(result);
+    }
     } catch (error) {
       next(error);
     }

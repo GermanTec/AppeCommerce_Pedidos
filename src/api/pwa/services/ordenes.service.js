@@ -1,31 +1,31 @@
-import Orders from '../models/orders';
+import Ordenes from '../models/ordenes';
 import { OK, FAIL, BITACORA, DATA, AddMSG } from '../../../middlewares/respPWA.handler';
 
 
 //==========================================GET===========================================================S
-export const getOrdersAll = async() => {
+export const getOrdenesAll = async() => {
     let bitacora = BITACORA();
     let data = DATA();
 
     try {
-        bitacora.process = "Extraer todas los pedidos";
+        bitacora.process = "Extraer todas las ordenes";
         data.method = "GET";
-        data.api = "/pedido";
-        data.process = "Extraer todas los pedidos de la coleccción de Pedidos";
+        data.api = "/ordenes";
+        data.process = "Extraer todas las odenes de la coleccción de Ordenes";
 
-        const OrdersAll = await Orders.find().then((orders) => {
-            if(!orders) {
+        const OrdenesAll = await Ordenes.find().then((ordenes) => {
+            if(!ordenes) {
                 data.status = 404;
-                data.messageDEV = "La base de datos <<NO>> tiene Pedidos configurados";
+                data.messageDEV = "La base de datos <<NO>> tiene ordenes configuradas";
                 throw Error(data.messageDEV);
             }
 
-            return orders;
+            return ordenes;
         });
 
         data.status = 200; //200 = codigo cuando encuentras documentos
-        data.messageUSR = "La extracción de los Pedidos <<SI>> tuvo exito";
-        data.dataRes = OrdersAll;
+        data.messageUSR = "La extracción de las ordenes <<SI>> tuvo exito";
+        data.dataRes = OrdenesAll;
 
         bitacora = AddMSG(bitacora, data, 'OK', 200, true);
 
@@ -36,7 +36,7 @@ export const getOrdersAll = async() => {
         let {message} = error;
         if(!data.messageDEV) data.messageDEV = message;
         if(!data.dataRes.length === 0) data.dataRes = error;
-        data.messageUSR = "La extracción de los pedidos <<NO>> tuvo exito";
+        data.messageUSR = "La extracción de las ordenes <<NO>> tuvo exito";
 
         bitacora = AddMSG(bitacora, data, 'FAIL');
 
@@ -54,26 +54,26 @@ export const getOrdersAll = async() => {
 
 
 //==========================================GET ONE BY ID===========================================================S
-export const getOrdersOne = async (id) => {
+export const getOrdenesOne = async (id) => {
     let bitacora = BITACORA();
     let data = DATA();
 
     try {
-        bitacora.process = `Obtener Pedido por ID: ${id}`;
+        bitacora.process = `Obtener Orden por ID: ${id}`;
         data.method = "GET";
-        data.api = `/orders/${id}`;
-        data.process = `Obtener un Pedido específico de la colección de Pedidos por su ID`;
+        data.api = `/ordenes/${id}`;
+        data.process = `Obtener un orden específico de la colección de Ordenes por su ID`;
 
-        const OrderId = await Orders.findOne({ Id_OrdenOK: id });
-        if (!orders) {
+        const OrdenId = await Ordenes.findOne({ Id_OrdenOK: id });
+        if (!OrdenId) {
             data.status = 404;
-            data.messageDEV = `No se encontró un Pedido con el ID ${id}.`;
+            data.messageDEV = `No se encontró una orden con el ID ${id}.`;
             throw Error(data.messageDEV);
         }
 
         data.status = 200;
-        data.messageUSR = "La obtención del Pedido <<SI>> tuvo éxito";
-        data.dataRes = OrderId;
+        data.messageUSR = "La obtención de la orden <<SI>> tuvo éxito";
+        data.dataRes = OrdenId;
 
         bitacora = AddMSG(bitacora, data, 'OK', 200, true);
 
@@ -84,7 +84,7 @@ export const getOrdersOne = async (id) => {
         let { message } = error;
         if (!data.messageDEV) data.messageDEV = message;
         if (!data.dataRes.length === 0) data.dataRes = error;
-        data.messageUSR = "La obtención del Pedido <<NO>> tuvo éxito";
+        data.messageUSR = "La obtención de la orden <<NO>> tuvo éxito";
 
         bitacora = AddMSG(bitacora, data, 'FAIL');
 
@@ -103,33 +103,33 @@ export const getOrdersOne = async (id) => {
 
 
 //=========================================POST===========================================================
-export const addOrders = async(newOrder) => {
+export const addOrdenes = async(newOrden) => {
     let bitacora = BITACORA();
     let data = DATA();
 
     try {
-        bitacora.process = "Agregar un nuevo pedido";
+        bitacora.process = "Agregar una nueva orden";
         data.method = "POST";
-        data.api = "/pedido";
-        data.process = "Agregar un nuevo pedido a la coleccción de Pedidos";
+        data.api = "/orden";
+        data.process = "Agregar una nueva orden a la coleccción de Ordenes";
 
-        const orderAdded = await Orders.insertMany(
-            newOrder,
-            { order: true }
+        const ordenAdded = await Ordenes.insertMany(
+            newOrden,
+            { orden: true }
         )
-        .then((order) => {
-            if(!order) {
+        .then((orden) => {
+            if(!orden) {
                 data.status = 400; //400 de que no se pudo insertar; es diferente a 404
-                data.messageDEV = "La inserción del Pedido <<NO>> fue exitosa";
+                data.messageDEV = "La inserción de la orden <<NO>> fue exitosa";
                 throw Error(data.messageDEV);
             }
 
-            return order;
+            return orden;
         });
 
         data.status = 201; //201 = codigo cuando se inserta exitosamente SIUU
-        data.messageUSR = "La inserción del Pedido <<SI>> fue exitosa";
-        data.dataRes = orderAdded;
+        data.messageUSR = "La inserción de la orden <<SI>> fue exitosa";
+        data.dataRes = ordenAdded;
 
         bitacora = AddMSG(bitacora, data, 'OK', 201, true);
 
@@ -140,7 +140,7 @@ export const addOrders = async(newOrder) => {
         let {message} = error;
         if(!data.messageDEV) data.messageDEV = message;
         if(!data.dataRes.length === 0) data.dataRes = error;
-        data.messageUSR = "La inserción del Pedido <<NO>> fue exitosa";
+        data.messageUSR = "La inserción de la orden <<NO>> fue exitosa";
 
         bitacora = AddMSG(bitacora, data, 'FAIL');
 
@@ -160,29 +160,29 @@ export const addOrders = async(newOrder) => {
 
 
 //==============================================PUT===========================================================
-export const updateOrder = async (id, newData) => {
+export const updateOrden = async (id, newData) => {
     let bitacora = BITACORA();
     let data = DATA();
 
     try {
-        bitacora.process = `Actualizar el Pedido con ID ${id}`;
+        bitacora.process = `Actualizar la Orden con ID ${id}`;
         data.method = "PUT";
-        data.api = `/orders/${id}`;
-        data.process = "Actualizar el Pedido en la colección de Pedidos";
+        data.api = `/ordenes/${id}`;
+        data.process = "Actualizar la orden en la colección de Ordenes";
 
-        const updatedOrder = await Orders.findOneAndUpdate({ Id_OrdenOK: id }, newData, {
+        const updatedOrden = await Ordenes.findOneAndUpdate({ Id_OrdenOK: id }, newData, {
             new: true, 
         });
 
-        if (!updatedOrder) {
+        if (!updatedOrden) {
             data.status = 404;
-            data.messageDEV = `No se encontró un Pedido con el ID ${id}`;
+            data.messageDEV = `No se encontró una orden con el ID ${id}`;
             throw Error(data.messageDEV);
         }
 
         data.status = 200;
-        data.messageUSR = `Pedido con ID ${id} se actualizó con éxito`;
-        data.dataRes = updatedOrder;
+        data.messageUSR = `Orden con el ID ${id} se actualizó con éxito`;
+        data.dataRes = updatedOrden;
 
         bitacora = AddMSG(bitacora, data, 'OK', 200, true);
 
@@ -192,7 +192,7 @@ export const updateOrder = async (id, newData) => {
         let { message } = error;
         if (!data.messageDEV) data.messageDEV = message;
         if (!data.dataRes.length === 0) data.dataRes = error;
-        data.messageUSR = `La actualización del Pedido con ID ${id} falló`;
+        data.messageUSR = `La actualización de la orden con ID ${id} falló`;
 
         bitacora = AddMSG(bitacora, data, 'FAIL');
 
@@ -212,30 +212,40 @@ export const updateOrder = async (id, newData) => {
 
 
 //===========================================DELETE===========================================================
-export const deleteOrderOne = async (valueToDelete) => {
+export const deleteOrdenOne = async (id) => {
     let bitacora = BITACORA();
     let data = DATA();
 
     try {
-        bitacora.process = `Eliminar el Pedido con ID ${id}`;
+        bitacora.process = `Eliminar la orden con ID ${id}`;
         data.method = "DELETE";
-        data.api = `/orders/${id}`;
-        data.process = "Eliminar el Pedido en la colección de Pedidos";
+        data.api = `/ordenes/${id}`;
+        data.process = "Eliminar la orden en la colección de Ordenes";
       // Realiza la eliminación del documento en función del valor proporcionado
-      const result = await Orders.deleteOne({ Id_OrdenOK: valueToDelete });
+      const result = await Ordenes.deleteOne({ Id_OrdenOK: id });
   
-      if (result.deletedCount === 0) {
+      if (result.deleteOne === 0) {
         // Si no se encontró un documento para eliminar, lanza un error
-        throw new Error('Pedido no encontrado.');
+        //throw new Error('Orden no encontrada.');
+        data.status = 404;
+        data.messageDEV = `No se encontró una orden con el ID ${id}`;
+        throw Error(data.messageDEV);
       }
   
-      return { message: 'Pedido eliminado correctamente.' };
+      //return { message: 'Orden eliminada correctamente.' };
+      data.status = 200;
+        data.messageUSR = `Orden con el ID ${id} se elimino con éxito`;
+        data.dataRes = deleteOne;
+
+        bitacora = AddMSG(bitacora, data, 'OK', 200, true);
+
+        return OK(bitacora);
     } catch (error) {
         if(!data.status) data.status = error.statusCode;
         let {message} = error;
         if(!data.messageDEV) data.messageDEV = message;
         if(!data.dataRes.length === 0) data.dataRes = error;
-        data.messageUSR = "La eliminacion del pedido <<NO>> tuvo exito";
+        data.messageUSR = "La eliminacion de la orden <<NO>> tuvo exito";
 
         bitacora = AddMSG(bitacora, data, 'FAIL');
 
