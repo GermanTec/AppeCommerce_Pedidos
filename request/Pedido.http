@@ -1,4 +1,4 @@
-@api = http://localhost:3020/api/pwa/pedido
+@api = http://localhost:3020/api/pwa/ordenes
 ##GET ALL
 GET {{api}}
 ### POST ITEM PRODUCTO Y/O SERVICIO
